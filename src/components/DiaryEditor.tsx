@@ -4,7 +4,7 @@ import {DiaryDispatchContext} from "../App.jsx"
 
 import MyHeader from "./MyHeader.jsx"
 import MyButton from "./MyButton.jsx"
-import EmotionItem from "./EmoitonItem.jsx"
+import EmotionItem from "./EmotionItem.jsx"
 
 import {getStringDate} from "../util/date.js"
 import {emotionList} from "../util/emotion.js"

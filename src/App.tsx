@@ -1,63 +1,60 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, {useEffect, useReducer, useRef} from "react"
 
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css"
+import {BrowserRouter, Routes, Route} from "react-router-dom"
 
-import Home from "./pages/Home";
-import New from "./pages/New";
-import Edit from "./pages/Edit";
-import Diary from "./pages/Diary";
+import {Diary, Edit, Home, New} from "./pages"
 
 const reducer = (state, action) => {
-  let newState = [];
+  let newState = []
   switch (action.type) {
     case "INIT": {
-      return action.data;
+      return action.data
     }
     case "CREATE": {
-      newState = [action.data, ...state];
-      break;
+      newState = [action.data, ...state]
+      break
     }
     case "REMOVE": {
-      newState = state.filter((it) => it.id !== action.targetId);
-      break;
+      newState = state.filter((it) => it.id !== action.targetId)
+      break
     }
     case "EDIT": {
       newState = state.map((it) =>
-        it.id === action.data.id ? { ...action.data } : it
-      );
-      break;
+        it.id === action.data.id ? {...action.data} : it
+      )
+      break
     }
     default:
-      return state;
+      return state
   }
-  localStorage.setItem("diary", JSON.stringify(newState)); //서버에  요청
-  return newState;
-};
+  localStorage.setItem("diary", JSON.stringify(newState)) //서버에  요청
+  return newState
+}
 
-export const DiaryStateContext = React.createContext();
-export const DiaryDispatchContext = React.createContext();
+export const DiaryStateContext = React.createContext()
+export const DiaryDispatchContext = React.createContext()
 
 function App() {
-  const env = process.env;
-  env.PUBLIC_URL = env.PUBLIC_URL || "";
+  const env = process.env
+  env.PUBLIC_URL = env.PUBLIC_URL || ""
 
-  const [data, dispatch] = useReducer(reducer, []);
+  const [data, dispatch] = useReducer(reducer, [])
 
   useEffect(() => {
-    const localData = localStorage.getItem("diary"); // 서버
+    const localData = localStorage.getItem("diary") // 서버
     if (localData) {
       const diaryList = JSON.parse(localData).sort(
         (a, b) => parseInt(b.id) - parseInt(a.id)
-      );
+      )
       if (diaryList.length >= 1) {
-        dataId.current = parseInt(diaryList[0].id) + 1;
-        dispatch({ type: "INIT", data: diaryList });
+        dataId.current = parseInt(diaryList[0].id) + 1
+        dispatch({type: "INIT", data: diaryList})
       }
     }
-  }, []);
+  }, [])
 
-  const dataId = useRef(0);
+  const dataId = useRef(0)
 
   //CREATE
   const onCreate = (date, content, emotion) => {
@@ -69,14 +66,14 @@ function App() {
         content,
         emotion,
       },
-    });
-    dataId.current++;
-  };
+    })
+    dataId.current++
+  }
 
   //REMOVE
   const onRemove = (targetId) => {
-    dispatch({ type: "REMOVE", targetId });
-  };
+    dispatch({type: "REMOVE", targetId})
+  }
   //EDIT
   const onEdit = (targetId, date, content, emotion) => {
     dispatch({
@@ -87,13 +84,13 @@ function App() {
         content,
         emotion,
       },
-    });
-  };
+    })
+  }
 
   return (
     <>
       <DiaryStateContext.Provider value={data}>
-        <DiaryDispatchContext.Provider value={{ onCreate, onRemove, onEdit }}>
+        <DiaryDispatchContext.Provider value={{onCreate, onRemove, onEdit}}>
           <BrowserRouter>
             <div className="App">
               {/* process.env.PUBLIC_URL :현 위치와 상관없이 public 디렉터리를  가리킴 */}
@@ -110,7 +107,7 @@ function App() {
         </DiaryDispatchContext.Provider>
       </DiaryStateContext.Provider>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
