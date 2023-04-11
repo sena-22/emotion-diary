@@ -1,12 +1,33 @@
-import React, {useEffect, useReducer, useRef} from "react"
-
-import "./App.css"
+import React, {useEffect, useReducer, useRef, createContext} from "react"
 import {BrowserRouter, Routes, Route} from "react-router-dom"
 
+import "./App.css"
 import {Diary, Edit, Home, New} from "./pages"
 
-const reducer = (state, action) => {
-  let newState = []
+interface DiaryItem {
+  id?: number
+  date: string
+  content: string
+  emotion: string
+  text?: string
+}
+
+type Action =
+  | {type: "INIT"; data: DiaryItem[]}
+  | {type: "CREATE"; data: DiaryItem}
+  | {type: "REMOVE"; targetId: number}
+  | {type: "EDIT"; data: DiaryItem}
+
+type TodoState = DiaryItem[]
+
+type TodoDispatch = {
+  onCreate: (data: DiaryItem) => void
+  onRemove: (targetId: number) => void
+  onEdit: (item: DiaryItem) => void
+}
+
+const reducer: React.Reducer<DiaryItem[], Action> = (state, action) => {
+  let newState: DiaryItem[] = []
   switch (action.type) {
     case "INIT": {
       return action.data
@@ -32,8 +53,12 @@ const reducer = (state, action) => {
   return newState
 }
 
-export const DiaryStateContext = React.createContext()
-export const DiaryDispatchContext = React.createContext()
+export const DiaryStateContext = createContext<TodoState>([])
+export const DiaryDispatchContext = createContext<TodoDispatch>({
+  onCreate: () => {},
+  onRemove: () => {},
+  onEdit: () => {},
+})
 
 function App() {
   const env = process.env
@@ -43,10 +68,12 @@ function App() {
 
   useEffect(() => {
     const localData = localStorage.getItem("diary") // 서버
+
     if (localData) {
       const diaryList = JSON.parse(localData).sort(
-        (a, b) => parseInt(b.id) - parseInt(a.id)
+        (a: {id: string}, b: {id: string}) => parseInt(b.id) - parseInt(a.id)
       )
+
       if (diaryList.length >= 1) {
         dataId.current = parseInt(diaryList[0].id) + 1
         dispatch({type: "INIT", data: diaryList})
@@ -57,33 +84,24 @@ function App() {
   const dataId = useRef(0)
 
   //CREATE
-  const onCreate = (date, content, emotion) => {
+  const onCreate = (newDiaryItem: DiaryItem) => {
     dispatch({
       type: "CREATE",
-      data: {
-        id: dataId.current,
-        date: new Date(date).getTime(),
-        content,
-        emotion,
-      },
+      data: newDiaryItem,
     })
     dataId.current++
   }
 
   //REMOVE
-  const onRemove = (targetId) => {
+  const onRemove = (targetId: number) => {
     dispatch({type: "REMOVE", targetId})
   }
+
   //EDIT
-  const onEdit = (targetId, date, content, emotion) => {
+  const onEdit = (DiaryItem: DiaryItem) => {
     dispatch({
       type: "EDIT",
-      data: {
-        id: targetId,
-        date: new Date(date).getTime(),
-        content,
-        emotion,
-      },
+      data: DiaryItem,
     })
   }
 
