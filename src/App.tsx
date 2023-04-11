@@ -2,23 +2,16 @@ import React, {useEffect, useReducer, useRef, createContext} from "react"
 import {BrowserRouter, Routes, Route} from "react-router-dom"
 
 import "./App.css"
-import {Diary, Edit, Home, New} from "./pages"
+import {Diary, Edit, Home, New} from "./pages/index"
 
-interface DiaryItem {
-  id?: number
-  date: string
-  content: string
-  emotion: string
-  text?: string
-}
+import {DiaryItem} from "./types"
+import {TodoState} from "./types"
 
 type Action =
   | {type: "INIT"; data: DiaryItem[]}
   | {type: "CREATE"; data: DiaryItem}
   | {type: "REMOVE"; targetId: number}
   | {type: "EDIT"; data: DiaryItem}
-
-type TodoState = DiaryItem[]
 
 type TodoDispatch = {
   onCreate: (data: DiaryItem) => void
@@ -37,12 +30,12 @@ const reducer: React.Reducer<DiaryItem[], Action> = (state, action) => {
       break
     }
     case "REMOVE": {
-      newState = state.filter((it) => it.id !== action.targetId)
+      newState = state.filter((it) => it.dataId !== action.targetId)
       break
     }
     case "EDIT": {
       newState = state.map((it) =>
-        it.id === action.data.id ? {...action.data} : it
+        it.dataId === action.data.dataId ? {...action.data} : it
       )
       break
     }
@@ -71,7 +64,7 @@ function App() {
 
     if (localData) {
       const diaryList = JSON.parse(localData).sort(
-        (a: {id: string}, b: {id: string}) => parseInt(b.id) - parseInt(a.id)
+        (a: {id: number}, b: {id: number}) => b.id - a.id
       )
 
       if (diaryList.length >= 1) {
@@ -84,10 +77,15 @@ function App() {
   const dataId = useRef(0)
 
   //CREATE
-  const onCreate = (newDiaryItem: DiaryItem) => {
+  const onCreate = ({date:, content, emotion}) => {
     dispatch({
       type: "CREATE",
-      data: newDiaryItem,
+      data: {
+        id: dataId.current,
+        date: new Date(date).getTime(),
+        content,
+        emotion,
+      },
     })
     dataId.current++
   }

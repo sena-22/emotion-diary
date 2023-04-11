@@ -9,29 +9,40 @@ import EmotionItem from "./EmotionItem"
 import {getStringDate} from "../util/date.js"
 import {emotionList} from "../util/emotion.js"
 import React from "react"
+import {DiaryItem} from "../types"
 
 const env = process.env
 env.PUBLIC_URL = env.PUBLIC_URL || ""
 
+type DiaryEditorProps = {
+  isEdit: boolean
+  originData: DiaryItem | undefined
+}
+
 /* 새 일기 작성, 일기 수정 페이지에서 같이 쓸 컴포넌트 */
-const DiaryEditor = ({isEdit, originData}) => {
-  const contentRef = useRef()
+const DiaryEditor = (
+  {isEdit, originData}: DiaryEditorProps = {
+    isEdit: false,
+    originData: undefined,
+  }
+) => {
+  const contentRef = useRef<HTMLTextAreaElement>(null)
   const [content, setContent] = useState("")
   // 어떤 감정을 선택했는지 저장하는 state
-  const [emotion, setEmotion] = useState(3)
+  const [emotion, setEmotion] = useState<number>(3)
   const [date, setDate] = useState(getStringDate(new Date()))
 
   const {onCreate, onEdit, onRemove} = useContext(DiaryDispatchContext)
 
   //감정을 선택하면 상태를 바꿔주는 함수
-  const handleClickEmote = useCallback((emotion) => {
+  const handleClickEmote = useCallback((emotion: number) => {
     setEmotion(emotion)
   }, [])
 
   const navigate = useNavigate()
 
   const handleSubmit = () => {
-    if (contentRef.length < 1) {
+    if (contentRef.current && contentRef.current.value.length < 1) {
       contentRef.current.focus()
       return
     }
@@ -50,7 +61,13 @@ const DiaryEditor = ({isEdit, originData}) => {
         }
         onCreate(newDiaryItem)
       } else {
-        onEdit(originData.id, date, content, emotion)
+        const editItem = {
+          dataId: originData?.dataId,
+          date,
+          content,
+          emotion,
+        }
+        onEdit(editItem)
       }
     }
     navigate("/", {replace: true}) //뒤로 가기 못 오게 만듬
@@ -58,7 +75,7 @@ const DiaryEditor = ({isEdit, originData}) => {
 
   const handleRemove = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      onRemove(originData.id)
+      onRemove(originData?.dataId ?? 0)
       navigate("/", {replace: true})
     }
   }
@@ -66,7 +83,7 @@ const DiaryEditor = ({isEdit, originData}) => {
     navigate(-1)
   }
   useEffect(() => {
-    if (isEdit) {
+    if (isEdit && originData) {
       setDate(getStringDate(new Date(parseInt(originData.date))))
       setEmotion(originData.emotion)
       setContent(originData.content)
@@ -78,12 +95,14 @@ const DiaryEditor = ({isEdit, originData}) => {
         headText={isEdit ? "일기 수정하기" : "새 일기쓰기"}
         leftChild={<MyButton onClick={goBack} text={"< 뒤로가기"} />}
         rightChild={
-          isEdit && (
+          isEdit ? (
             <MyButton
               text={"삭제하기"}
               type={"negative"}
               onClick={handleRemove}
             />
+          ) : (
+            <></>
           )
         }
       />
