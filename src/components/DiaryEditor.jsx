@@ -1,13 +1,14 @@
 import {useNavigate} from "react-router-dom"
 import {useState, useRef, useContext, useEffect, useCallback} from "react"
-import {DiaryDispatchContext} from "../App.jsx"
+import {DiaryDispatchContext} from "../App"
 
-import MyHeader from "./MyHeader.jsx"
-import MyButton from "./MyButton.jsx"
-import EmotionItem from "./EmotionItem.jsx"
+import MyHeader from "./MyHeader"
+import MyButton from "./MyButton"
+import EmotionItem from "./EmotionItem"
 
 import {getStringDate} from "../util/date.js"
 import {emotionList} from "../util/emotion.js"
+import React from "react"
 
 const env = process.env
 env.PUBLIC_URL = env.PUBLIC_URL || ""
@@ -42,7 +43,12 @@ const DiaryEditor = ({isEdit, originData}) => {
     ) {
       if (!isEdit) {
         //수정 중이지 않을 때
-        onCreate(date, content, emotion)
+        const newDiaryItem = {
+          date: date,
+          content: content,
+          emotion: emotion,
+        }
+        onCreate(newDiaryItem)
       } else {
         onEdit(originData.id, date, content, emotion)
       }
