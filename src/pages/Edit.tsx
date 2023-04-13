@@ -2,8 +2,15 @@ import {useContext, useEffect, useState} from "react"
 import {useNavigate, useParams} from "react-router-dom"
 import {DiaryStateContext} from "../App"
 import DiaryEditor from "../components/DiaryEditor"
-import {DiaryItem} from "../types"
+
 import React from "react"
+
+interface DiaryItem {
+  id: number
+  date: number
+  emotion: number
+  content: string
+}
 
 const Edit = () => {
   const [originData, setOriginData] = useState<DiaryItem>()
@@ -19,9 +26,7 @@ const Edit = () => {
 
   useEffect(() => {
     if (diaryList.length >= 1) {
-      const targetDiary = diaryList.find(
-        (it) => it.dataId === parseInt(id ?? "0")
-      )
+      const targetDiary = diaryList.find((it) => it.id === parseInt(id ?? "0"))
 
       if (targetDiary) {
         setOriginData(targetDiary)

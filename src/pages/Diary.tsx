@@ -7,13 +7,15 @@ import {MyHeader, MyButton} from "../components"
 
 import {getStringDate} from "../util/date.js"
 import {emotionList} from "../util/emotion.js"
-
-import {DiaryItem} from "../types"
+interface DiaryItem {
+  id: number
+  date: number
+  emotion: number
+  content: string
+}
 
 const Diary = () => {
   const {id} = useParams()
-
-  console.log("id", id)
   const diaryList: DiaryItem[] = useContext(DiaryStateContext)
   const navigate = useNavigate()
   const [data, setData] = useState<DiaryItem | null>()
@@ -26,7 +28,7 @@ const Diary = () => {
   useEffect(() => {
     if (diaryList.length >= 1) {
       const targetDiary: DiaryItem | undefined = diaryList.find(
-        (it: DiaryItem) => it.dataId === parseInt(id ?? "0")
+        (it: DiaryItem) => it.id === parseInt(id ?? "0")
       )
 
       if (targetDiary) {
@@ -54,7 +56,7 @@ const Diary = () => {
           rightChild={
             <MyButton
               text={"수정하기"}
-              onClick={() => navigate(`/edit/${data.dataId}`)}
+              onClick={() => navigate(`/edit/${data.id}`)}
             />
           }
         />

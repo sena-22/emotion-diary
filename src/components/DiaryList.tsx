@@ -2,10 +2,16 @@ import React, {useState} from "react"
 import MyButton from "./MyButton"
 import {useNavigate} from "react-router-dom"
 import DiaryItem from "./DiaryItem"
-import {DiaryItem as DiaryItemProps, TodoState} from "../types"
 
-interface DiaryListType {
-  diaryList: TodoState
+type Props = {
+  id: number
+  date: number
+  emotion: number
+  content: string
+}
+
+type DiaryListProp = {
+  diaryList: Props[]
 }
 
 type Option = {
@@ -48,16 +54,15 @@ const ControlMenu = React.memo(
   }
 )
 
-const DiaryList = ({diaryList}: DiaryListType) => {
+const DiaryList = ({diaryList}: DiaryListProp) => {
   const navigate = useNavigate()
-
   const [sortType, setSortType] = useState("latest")
   //감정 상태 필터링
   const [filter, setFilter] = useState("all")
 
   const getProcessedDiaryList = () => {
     //필터링용 함수
-    const filterCallback = (item: DiaryItemProps) => {
+    const filterCallback = (item: Props) => {
       if (filter === "good") {
         return item.emotion <= 3
       } else {
@@ -69,21 +74,18 @@ const DiaryList = ({diaryList}: DiaryListType) => {
     //diaryList를 깊은 복사하기 위해 JSON.parse(JSON.stringify()사용
 
     //객체 배열을 정렬하기 위해서는 비교 함수를 만들어줘야 함
-    const compare = (a: DiaryItemProps, b: DiaryItemProps) => {
+    const compare = (a: Props, b: Props) => {
       if (sortType === "latest") {
-        return parseInt(b.date) - parseInt(a.date)
+        return b.date - a.date
       } else {
-        return parseInt(a.date) - parseInt(b.date)
+        return a.date - b.date
       }
     }
     const copyList = JSON.parse(JSON.stringify(diaryList))
-
-    console.log(diaryList)
-
     const filteredList =
       filter === "all"
         ? copyList
-        : copyList.filter((it: DiaryItemProps) => filterCallback(it))
+        : copyList.filter((it: Props) => filterCallback(it))
 
     const sortedList = filteredList.sort(compare)
     return sortedList
@@ -112,8 +114,8 @@ const DiaryList = ({diaryList}: DiaryListType) => {
           />
         </div>
       </div>
-      {getProcessedDiaryList().map((it: DiaryItemProps) => (
-        <DiaryItem key={it.dataId} {...it} />
+      {getProcessedDiaryList().map((it: Props) => (
+        <DiaryItem key={it.id} {...it} />
       ))}
     </div>
   )

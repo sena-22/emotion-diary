@@ -1,3 +1,4 @@
+import React from "react"
 import {useNavigate} from "react-router-dom"
 import {useState, useRef, useContext, useEffect, useCallback} from "react"
 import {DiaryDispatchContext} from "../App"
@@ -8,24 +9,24 @@ import EmotionItem from "./EmotionItem"
 
 import {getStringDate} from "../util/date.js"
 import {emotionList} from "../util/emotion.js"
-import React from "react"
-import {DiaryItem} from "../types"
 
 const env = process.env
 env.PUBLIC_URL = env.PUBLIC_URL || ""
 
+interface createDiary {
+  date: number
+  content: string
+  emotion: number
+  id: number
+}
+
 type DiaryEditorProps = {
   isEdit: boolean
-  originData: DiaryItem | undefined
+  originData: createDiary | undefined
 }
 
 /* 새 일기 작성, 일기 수정 페이지에서 같이 쓸 컴포넌트 */
-const DiaryEditor = (
-  {isEdit, originData}: DiaryEditorProps = {
-    isEdit: false,
-    originData: undefined,
-  }
-) => {
+const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
   const contentRef = useRef<HTMLTextAreaElement>(null)
   const [content, setContent] = useState("")
   // 어떤 감정을 선택했는지 저장하는 state
@@ -54,20 +55,23 @@ const DiaryEditor = (
     ) {
       if (!isEdit) {
         //수정 중이지 않을 때
-        const newDiaryItem = {
+        const newDiaryItem: createDiary = {
           date: date,
           content: content,
           emotion: emotion,
+          id: 0,
         }
         onCreate(newDiaryItem)
       } else {
-        const editItem = {
-          dataId: originData?.dataId,
-          date,
-          content,
-          emotion,
+        if (originData) {
+          const editItem = {
+            id: originData.id,
+            date,
+            content,
+            emotion,
+          }
+          onEdit(editItem)
         }
-        onEdit(editItem)
       }
     }
     navigate("/", {replace: true}) //뒤로 가기 못 오게 만듬
@@ -75,7 +79,7 @@ const DiaryEditor = (
 
   const handleRemove = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      onRemove(originData?.dataId ?? 0)
+      onRemove(originData?.id ?? 0)
       navigate("/", {replace: true})
     }
   }
@@ -84,7 +88,7 @@ const DiaryEditor = (
   }
   useEffect(() => {
     if (isEdit && originData) {
-      setDate(getStringDate(new Date(parseInt(originData.date))))
+      setDate(getStringDate(new Date(originData.date)))
       setEmotion(originData.emotion)
       setContent(originData.content)
     }

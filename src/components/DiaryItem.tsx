@@ -1,9 +1,16 @@
 import React from "react"
 import MyButton from "./MyButton"
 import {useNavigate} from "react-router-dom"
-import {DiaryItem as DiaryItemProps} from "../types"
 
-const DiaryItem = ({dataId, emotion, content, date}: DiaryItemProps) => {
+interface Props {
+  id: number
+  date: number
+  emotion: number
+  content: string
+}
+
+const DiaryItem = (props: Props) => {
+  const {id, date, emotion, content} = props
   const navigate = useNavigate()
 
   const env = process.env
@@ -13,11 +20,11 @@ const DiaryItem = ({dataId, emotion, content, date}: DiaryItemProps) => {
   const strDate = new Date(date).toLocaleDateString()
 
   const goDetail = () => {
-    navigate(`/diary/${dataId}`)
+    navigate(`/diary/${id}`)
   }
 
   const goEdit = () => {
-    navigate(`/edit/${dataId}`)
+    navigate(`/edit/${id}`)
   }
 
   return (

@@ -5,14 +5,18 @@ import MyButton from "../components/MyButton"
 import {DiaryStateContext} from "../App"
 import DiaryList from "../components/DiaryList"
 import React from "react"
-import {DiaryItem} from "../types"
+
+interface DiaryItem {
+  id: number
+  date: number
+  emotion: number
+  content: string
+}
 
 const Home = () => {
   const diaryList = useContext(DiaryStateContext)
-
   const [data, setData] = useState<DiaryItem[]>([])
-  console.log("diaryList in home", diaryList)
-  console.log("data in home", data)
+
   const [curDate, setCurDate] = useState(new Date())
 
   //getMonth의 경우 1월이 0으로나와서 +1을 해주어야 한다.
@@ -44,12 +48,11 @@ const Home = () => {
 
       setData(
         diaryList.filter(
-          (it) =>
-            firstDay <= Date.parse(it.date) && Date.parse(it.date) <= lastDay
+          (it: DiaryItem) => firstDay <= it.date && it.date <= lastDay
         )
       )
     }
-  }, [diaryList, curDate])
+  }, [curDate])
 
   const increaseMonth = () => {
     setCurDate(

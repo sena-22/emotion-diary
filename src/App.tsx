@@ -4,8 +4,12 @@ import {BrowserRouter, Routes, Route} from "react-router-dom"
 import "./App.css"
 import {Diary, Edit, Home, New} from "./pages/index"
 
-import {DiaryItem} from "./types"
-import {TodoState} from "./types"
+interface DiaryItem {
+  id: number
+  date: number
+  content: string
+  emotion: number
+}
 
 type Action =
   | {type: "INIT"; data: DiaryItem[]}
@@ -30,12 +34,12 @@ const reducer: React.Reducer<DiaryItem[], Action> = (state, action) => {
       break
     }
     case "REMOVE": {
-      newState = state.filter((it) => it.dataId !== action.targetId)
+      newState = state.filter((it) => it.id !== action.targetId)
       break
     }
     case "EDIT": {
       newState = state.map((it) =>
-        it.dataId === action.data.dataId ? {...action.data} : it
+        it.id === action.data.id ? {...action.data} : it
       )
       break
     }
@@ -46,7 +50,7 @@ const reducer: React.Reducer<DiaryItem[], Action> = (state, action) => {
   return newState
 }
 
-export const DiaryStateContext = createContext<TodoState>([])
+export const DiaryStateContext = createContext<DiaryItem[]>([])
 export const DiaryDispatchContext = createContext<TodoDispatch>({
   onCreate: () => {},
   onRemove: () => {},
@@ -58,6 +62,8 @@ function App() {
   env.PUBLIC_URL = env.PUBLIC_URL || ""
 
   const [data, dispatch] = useReducer(reducer, [])
+
+  const dataId = useRef(0)
 
   useEffect(() => {
     const localData = localStorage.getItem("diary") // 서버
@@ -74,20 +80,18 @@ function App() {
     }
   }, [])
 
-  const dataId = useRef(0)
-
   //CREATE
-  const onCreate = ({date:, content, emotion}) => {
+  const onCreate = ({date, content, emotion}: DiaryItem) => {
     dispatch({
       type: "CREATE",
       data: {
         id: dataId.current,
-        date: new Date(date).getTime(),
+        date: new Date(date).getTime(), //ms
         content,
         emotion,
       },
     })
-    dataId.current++
+    dataId.current += 1
   }
 
   //REMOVE
@@ -96,10 +100,15 @@ function App() {
   }
 
   //EDIT
-  const onEdit = (DiaryItem: DiaryItem) => {
+  const onEdit = ({id, date, content, emotion}: DiaryItem) => {
     dispatch({
       type: "EDIT",
-      data: DiaryItem,
+      data: {
+        id: Number(id),
+        date: new Date(date).getTime(),
+        content,
+        emotion,
+      },
     })
   }
 
@@ -109,9 +118,6 @@ function App() {
         <DiaryDispatchContext.Provider value={{onCreate, onRemove, onEdit}}>
           <BrowserRouter>
             <div className="App">
-              {/* process.env.PUBLIC_URL :현 위치와 상관없이 public 디렉터리를  가리킴 */}
-              {/* <img src={process.env.PUBLIC_URL + "/emotion/emotion1.png"} /> */}
-
               <Routes>
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/new" element={<New />}></Route>
