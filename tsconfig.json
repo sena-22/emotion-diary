@@ -3,7 +3,6 @@
     "target": "es5",
     "lib": ["DOM", "es5", "es6", "es7"],
     "module": "commonjs",
-    "allowJs": true,
     "checkJs": true,
     "jsx": "react",
     "removeComments": true,

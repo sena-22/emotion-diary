@@ -1,15 +1,11 @@
 import React from "react"
-import MyButton from "./MyButton"
 import {useNavigate} from "react-router-dom"
 
-interface Props {
-  id: number
-  date: number
-  emotion: number
-  content: string
-}
+import MyButton from "./MyButton"
 
-const DiaryItem = (props: Props) => {
+import {DiaryItem as DiaryItemProps} from "../types"
+
+const DiaryItem = (props: DiaryItemProps) => {
   const {id, date, emotion, content} = props
   const navigate = useNavigate()
 

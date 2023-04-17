@@ -1,28 +1,24 @@
 import React from "react"
-import {useNavigate} from "react-router-dom"
 import {useState, useRef, useContext, useEffect, useCallback} from "react"
+import {useNavigate} from "react-router-dom"
+
 import {DiaryDispatchContext} from "../App"
 
 import MyHeader from "./MyHeader"
 import MyButton from "./MyButton"
 import EmotionItem from "./EmotionItem"
 
-import {getStringDate} from "../util/date.js"
-import {emotionList} from "../util/emotion.js"
+import {getStringDate} from "../util/date"
+import {emotionList} from "../util/emotion"
+
+import {DiaryItem} from "../types"
 
 const env = process.env
 env.PUBLIC_URL = env.PUBLIC_URL || ""
 
-interface createDiary {
-  date: number
-  content: string
-  emotion: number
-  id: number
-}
-
 type DiaryEditorProps = {
   isEdit: boolean
-  originData: createDiary | undefined
+  originData: DiaryItem | undefined
 }
 
 /* 새 일기 작성, 일기 수정 페이지에서 같이 쓸 컴포넌트 */
@@ -55,7 +51,7 @@ const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
     ) {
       if (!isEdit) {
         //수정 중이지 않을 때
-        const newDiaryItem: createDiary = {
+        const newDiaryItem: DiaryItem = {
           date: date,
           content: content,
           emotion: emotion,
@@ -86,6 +82,7 @@ const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
   const goBack = () => {
     navigate(-1)
   }
+
   useEffect(() => {
     if (isEdit && originData) {
       setDate(getStringDate(new Date(originData.date)))
@@ -93,6 +90,7 @@ const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
       setContent(originData.content)
     }
   }, [isEdit, originData])
+
   return (
     <div className="DiaryEditor">
       <MyHeader

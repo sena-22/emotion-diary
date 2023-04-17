@@ -1,17 +1,13 @@
 import React, {useState} from "react"
-import MyButton from "./MyButton"
 import {useNavigate} from "react-router-dom"
+
+import MyButton from "./MyButton"
 import DiaryItem from "./DiaryItem"
 
-type Props = {
-  id: number
-  date: number
-  emotion: number
-  content: string
-}
+import {DiaryItem as DiaryItemProps} from "../types"
 
 type DiaryListProp = {
-  diaryList: Props[]
+  diaryList: DiaryItemProps[]
 }
 
 type Option = {
@@ -62,7 +58,7 @@ const DiaryList = ({diaryList}: DiaryListProp) => {
 
   const getProcessedDiaryList = () => {
     //필터링용 함수
-    const filterCallback = (item: Props) => {
+    const filterCallback = (item: DiaryItemProps) => {
       if (filter === "good") {
         return item.emotion <= 3
       } else {
@@ -74,7 +70,7 @@ const DiaryList = ({diaryList}: DiaryListProp) => {
     //diaryList를 깊은 복사하기 위해 JSON.parse(JSON.stringify()사용
 
     //객체 배열을 정렬하기 위해서는 비교 함수를 만들어줘야 함
-    const compare = (a: Props, b: Props) => {
+    const compare = (a: DiaryItemProps, b: DiaryItemProps) => {
       if (sortType === "latest") {
         return b.date - a.date
       } else {
@@ -85,7 +81,7 @@ const DiaryList = ({diaryList}: DiaryListProp) => {
     const filteredList =
       filter === "all"
         ? copyList
-        : copyList.filter((it: Props) => filterCallback(it))
+        : copyList.filter((it: DiaryItemProps) => filterCallback(it))
 
     const sortedList = filteredList.sort(compare)
     return sortedList
@@ -114,7 +110,7 @@ const DiaryList = ({diaryList}: DiaryListProp) => {
           />
         </div>
       </div>
-      {getProcessedDiaryList().map((it: Props) => (
+      {getProcessedDiaryList().map((it: DiaryItemProps) => (
         <DiaryItem key={it.id} {...it} />
       ))}
     </div>

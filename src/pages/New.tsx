@@ -1,6 +1,6 @@
-import React from "react"
+import React, {useEffect} from "react"
+
 import DiaryEditor from "../components/DiaryEditor"
-import {useEffect} from "react"
 
 const New = () => {
   useEffect(() => {

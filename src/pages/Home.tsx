@@ -1,17 +1,11 @@
-import {useContext, useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 
+import {DiaryStateContext} from "../App"
 import MyHeader from "../components/MyHeader"
 import MyButton from "../components/MyButton"
-import {DiaryStateContext} from "../App"
 import DiaryList from "../components/DiaryList"
-import React from "react"
 
-interface DiaryItem {
-  id: number
-  date: number
-  emotion: number
-  content: string
-}
+import {DiaryItem} from "../types"
 
 const Home = () => {
   const diaryList = useContext(DiaryStateContext)
@@ -21,11 +15,6 @@ const Home = () => {
 
   //getMonth의 경우 1월이 0으로나와서 +1을 해주어야 한다.
   const headText = `${curDate.getFullYear()}년 ${curDate.getMonth() + 1}월`
-
-  useEffect(() => {
-    const titleElement = document.getElementsByTagName("title")[0]
-    titleElement.innerHTML = `감정 일기장`
-  }, [])
 
   useEffect(() => {
     if (diaryList.length >= 1) {
@@ -52,7 +41,12 @@ const Home = () => {
         )
       )
     }
-  }, [curDate])
+  }, [diaryList, curDate])
+
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0]
+    titleElement.innerHTML = `감정 일기장`
+  }, [])
 
   const increaseMonth = () => {
     setCurDate(

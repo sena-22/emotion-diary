@@ -5,14 +5,10 @@ import {useParams, useNavigate} from "react-router-dom"
 import {DiaryStateContext} from "../App"
 import {MyHeader, MyButton} from "../components"
 
-import {getStringDate} from "../util/date.js"
-import {emotionList} from "../util/emotion.js"
-interface DiaryItem {
-  id: number
-  date: number
-  emotion: number
-  content: string
-}
+import {getStringDate} from "../util/date"
+import {emotionList} from "../util/emotion"
+
+import {DiaryItem} from "../types"
 
 const Diary = () => {
   const {id} = useParams()

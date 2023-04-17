@@ -1,15 +1,10 @@
 import React, {useEffect, useReducer, useRef, createContext} from "react"
 import {BrowserRouter, Routes, Route} from "react-router-dom"
-
 import "./App.css"
+
 import {Diary, Edit, Home, New} from "./pages/index"
 
-interface DiaryItem {
-  id: number
-  date: number
-  content: string
-  emotion: number
-}
+import {DiaryItem} from "./types"
 
 type Action =
   | {type: "INIT"; data: DiaryItem[]}
@@ -66,7 +61,8 @@ function App() {
   const dataId = useRef(0)
 
   useEffect(() => {
-    const localData = localStorage.getItem("diary") // 서버
+    const localData = localStorage.getItem("diary")
+    // console.log(localData)
 
     if (localData) {
       const diaryList = JSON.parse(localData).sort(
