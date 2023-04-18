@@ -1,14 +1,15 @@
-import React, {useContext, useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 
-import {DiaryStateContext} from "../App"
 import MyHeader from "../components/MyHeader"
 import MyButton from "../components/MyButton"
 import DiaryList from "../components/DiaryList"
 
 import {DiaryItem} from "../types"
+import useDiaryStore from "../zustand/store"
 
 const Home = () => {
-  const diaryList = useContext(DiaryStateContext)
+  const {data: diaryList} = useDiaryStore((state) => state)
+
   const [data, setData] = useState<DiaryItem[]>([])
 
   const [curDate, setCurDate] = useState(new Date())

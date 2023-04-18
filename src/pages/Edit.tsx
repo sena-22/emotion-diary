@@ -1,18 +1,18 @@
-import {useContext, useEffect, useState} from "react"
+import {useEffect, useState} from "react"
 import {useNavigate, useParams} from "react-router-dom"
 
-import {DiaryStateContext} from "../App"
 import DiaryEditor from "../components/DiaryEditor"
 import {DiaryItem} from "../types"
 
 import React from "react"
+import useDiaryStore from "../zustand/store"
 
 const Edit = () => {
   const [originData, setOriginData] = useState<DiaryItem>()
   const {id} = useParams()
 
   const navigate = useNavigate()
-  const diaryList = useContext(DiaryStateContext)
+  const {data: diaryList} = useDiaryStore((state) => state)
 
   useEffect(() => {
     const titleElement = document.getElementsByTagName("title")[0]

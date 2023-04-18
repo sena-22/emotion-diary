@@ -1,8 +1,6 @@
 import React from "react"
-import {useState, useRef, useContext, useEffect, useCallback} from "react"
+import {useState, useRef, useEffect, useCallback} from "react"
 import {useNavigate} from "react-router-dom"
-
-import {DiaryDispatchContext} from "../App"
 
 import MyHeader from "./MyHeader"
 import MyButton from "./MyButton"
@@ -12,6 +10,7 @@ import {getStringDate} from "../util/date"
 import {emotionList} from "../util/emotion"
 
 import {DiaryItem} from "../types"
+import useDiaryStore from "../zustand/store"
 
 const env = process.env
 env.PUBLIC_URL = env.PUBLIC_URL || ""
@@ -29,7 +28,7 @@ const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
   const [emotion, setEmotion] = useState<number>(3)
   const [date, setDate] = useState(getStringDate(new Date()))
 
-  const {onCreate, onEdit, onRemove} = useContext(DiaryDispatchContext)
+  const {onCreate, onEdit, onRemove} = useDiaryStore((state) => state)
 
   //감정을 선택하면 상태를 바꿔주는 함수
   const handleClickEmote = useCallback((emotion: number) => {
