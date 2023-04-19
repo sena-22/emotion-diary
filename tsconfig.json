@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["DOM", "es5", "es6", "es7"],
+    "module": "commonjs",
+    "checkJs": true,
+    "jsx": "react",
+    "removeComments": true,
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
