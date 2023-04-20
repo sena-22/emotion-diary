@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <div className="App">
+        <div className="min-h-screen px-5 sm:w-[90vw] md:w-[640px]">
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/new" element={<New />}></Route>

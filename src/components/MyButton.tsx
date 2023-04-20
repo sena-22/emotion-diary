@@ -12,7 +12,13 @@ const MyButton = ({type = "default", text, onClick}: MyButtonProps) => {
 
   return (
     <button
-      className={["MyButton", `MyButton_${btnType}`].join(" ")}
+      className={`py-2 px-4 border-none rounded cursor-pointer ${
+        btnType === "positive"
+          ? "bg-[#64c964] text-white"
+          : btnType === "negative"
+          ? "bg-[#fd565f] text-white"
+          : "bg-[#ececec] text-black"
+      }`}
       onClick={onClick}
     >
       {text}

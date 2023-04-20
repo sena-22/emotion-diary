@@ -8,10 +8,10 @@ interface MyHeaderProps {
 
 const MyHeader = ({headText, leftChild, rightChild}: MyHeaderProps) => {
   return (
-    <header>
-      <div className="head_btn_left">{leftChild}</div>
-      <div className="head_text">{headText}</div>
-      <div className="head_btn_right">{rightChild}</div>
+    <header className="flex items-center border-b border-solid border-[#e2e2e2] py-5 px-0 [&>div]:flex">
+      <div className="justify-start w-1/4">{leftChild}</div>
+      <div className="justify-center w-2/4 text-2xl">{headText}</div>
+      <div className="justify-end w-1/4">{rightChild}</div>
     </header>
   )
 }
