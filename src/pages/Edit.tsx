@@ -1,10 +1,8 @@
-import {useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 import {useNavigate, useParams} from "react-router-dom"
 
 import DiaryEditor from "../components/DiaryEditor"
 import {DiaryItem} from "../types"
-
-import React from "react"
 import useDiaryStore from "../zustand/store"
 
 const Edit = () => {

@@ -1,15 +1,13 @@
-import React from "react"
-import {useState, useRef, useEffect, useCallback} from "react"
+import React, {useState, useRef, useEffect, useCallback} from "react"
 import {useNavigate} from "react-router-dom"
 
-import MyHeader from "./MyHeader"
-import MyButton from "./MyButton"
-import EmotionItem from "./EmotionItem"
+import {MyHeader, MyButton, EmotionItem} from "./index"
 
 import {getStringDate} from "../util/date"
 import {emotionList} from "../util/emotion"
 
 import {DiaryItem} from "../types"
+
 import useDiaryStore from "../zustand/store"
 
 const env = process.env
@@ -78,6 +76,7 @@ const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
       navigate("/", {replace: true})
     }
   }
+
   const goBack = () => {
     navigate(-1)
   }
@@ -91,7 +90,7 @@ const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
   }, [isEdit, originData])
 
   return (
-    <div className="DiaryEditor">
+    <div className="mb-10">
       <MyHeader
         headText={isEdit ? "일기 수정하기" : "새 일기쓰기"}
         leftChild={<MyButton onClick={goBack} text={"< 뒤로가기"} />}
@@ -109,20 +108,22 @@ const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
       />
       <div>
         <div>
-          <section>
-            <h4>오늘은 언제인가요?</h4>
+          <section className="mb-10">
+            <h4 className="text-[22px] font-bold mb-10 mt-10">
+              오늘은 언제인가요?
+            </h4>
             <div className="input_box">
               <input
-                className="input_date"
+                className="border-none rounded bg-[#ececec] py-2.5 px-5 cursor-pointer text-xl"
                 value={date || ""}
                 onChange={(e) => setDate(e.target.value)}
                 type="date"
               />
             </div>
           </section>
-          <section>
-            <h4>오늘의 감정</h4>
-            <div className="input_box emotion_list_wrapper">
+          <section className="mb-10">
+            <h4 className="text-[22px] font-bold mb-10">오늘의 감정</h4>
+            <div className="grid grid-cols-5 input_box gap-[2%]">
               {emotionList.map((it) => (
                 <EmotionItem
                   key={it.emotion_id}
@@ -134,18 +135,19 @@ const DiaryEditor = ({isEdit, originData}: DiaryEditorProps) => {
               ))}
             </div>
           </section>
-          <section>
-            <h4>오늘의 일기</h4>
+          <section className="mb-10">
+            <h4 className="text-[22px] font-bold mb-10">오늘의 일기</h4>
             <div className="input_box text_wrapper">
               <textarea
                 ref={contentRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                className="text-xl box-border w-full min-h-[200px] resize-y border-none rounded bg-[#ececec] p-5"
               />
             </div>
           </section>
-          <section>
-            <div className="control_box">
+          <section className="mb-10">
+            <div className="flex items-center justify-between">
               <MyButton text={"취소하기"} onClick={() => navigate(-1)} />
               <MyButton
                 text={"작성완료"}

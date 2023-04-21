@@ -36,7 +36,7 @@ const ControlMenu = React.memo(
   ({value, onChange, optionList}: ControlMenuProps) => {
     return (
       <select
-        className="ControlMenu"
+        className="mr-2.5 border-none rounded bg-[#ececec] py-2.5 px-5 cursor-pointer text-base"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
@@ -89,7 +89,7 @@ const DiaryList = ({diaryList}: DiaryListProp) => {
 
   return (
     <div className="DiaryList">
-      <div className="menu_wrapper">
+      <div className="flex justify-between mt-5 mb-7">
         <div className="left_col">
           <ControlMenu
             value={sortType}
@@ -102,7 +102,7 @@ const DiaryList = ({diaryList}: DiaryListProp) => {
             optionList={filterOptionList}
           />
         </div>
-        <div className="right_col">
+        <div className="grow [&>button]:w-full">
           <MyButton
             type={"positive"}
             text={"새 일기 쓰기"}

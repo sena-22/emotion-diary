@@ -10,6 +10,18 @@ import {emotionList} from "../util/emotion"
 import {DiaryItem} from "../types"
 import useDiaryStore from "../zustand/store"
 
+type EmotionType = {
+  [key: number]: string
+}
+
+const Emotion: EmotionType = {
+  1: "bg-[#64c964]",
+  2: "bg-[#9dd772]",
+  3: "bg-[#fdce17]",
+  4: "bg-[#fd8446]",
+  5: "bg-[#fd565f]",
+}
+
 const Diary = () => {
   const {id} = useParams()
   const {data: diaryList} = useDiaryStore((state) => state)
@@ -43,7 +55,7 @@ const Diary = () => {
       (it) => it.emotion_id === data.emotion
     )
     return (
-      <div className="DiaryPage">
+      <div>
         <MyHeader
           headText={`${getStringDate(new Date(data.date))} 기록`}
           leftChild={
@@ -57,24 +69,26 @@ const Diary = () => {
           }
         />
         <article>
-          <section>
-            <h4>오늘의 감정</h4>
+          <section className="w-full mb-[100px] flex flex-col items-center text-center">
+            <h4 className="text-[22px] font-bold m-5">오늘의 감정</h4>
             <div
               className={[
-                "diary_img_wrapper",
-                `diary_img_wrapper_${data.emotion}`,
+                " w-64 h-64 rounded flex flex-col items-center justify-around text-white",
+                Emotion[data.emotion],
               ].join(" ")}
             >
               <img src={currentEmotionData?.emotion_img} alt="emotion" />
-              <div className="emotion_descript">
+              <div className="text-2xl text-white">
                 {currentEmotionData?.emotion_descript}
               </div>
             </div>
           </section>
-          <section>
-            <h4>오늘의 일기</h4>
-            <div className="diary_content_wrapper">
-              <p>{data.content}</p>
+          <section className="flex flex-col items-center w-full mb-10 text-center">
+            <h4 className="text-[22px] font-bold m-5">오늘의 일기</h4>
+            <div className="w-full bg-[#ececec] rounded break-keep break-words">
+              <p className="p-5 text-xl font-normal text-left leading-[2.5]">
+                {data.content}
+              </p>
             </div>
           </section>
         </article>

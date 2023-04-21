@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react"
 
-import MyHeader from "../components/MyHeader"
-import MyButton from "../components/MyButton"
-import DiaryList from "../components/DiaryList"
+import {MyHeader, MyButton, DiaryList} from "../components"
 
 import {DiaryItem} from "../types"
 import useDiaryStore from "../zustand/store"
