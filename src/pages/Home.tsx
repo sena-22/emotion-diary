@@ -4,12 +4,11 @@ import {MyHeader, MyButton, DiaryList} from "../components"
 
 import {DiaryItem} from "../types"
 import useDiaryStore from "../zustand/store"
+import MetaHeader from "../components/MetaHeader"
 
 const Home = () => {
   const {data: diaryList} = useDiaryStore((state) => state)
-
   const [data, setData] = useState<DiaryItem[]>([])
-
   const [curDate, setCurDate] = useState(new Date())
 
   //getMonth의 경우 1월이 0으로나와서 +1을 해주어야 한다.
@@ -61,6 +60,7 @@ const Home = () => {
 
   return (
     <div>
+      <MetaHeader />
       <MyHeader
         headText={headText}
         leftChild={<MyButton text={"<"} onClick={decreaseMonth} />}
